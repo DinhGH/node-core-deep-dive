@@ -1,0 +1,27 @@
+services:
+  my-sql-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql_server_container
+    user: "0:0"
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=DockerP@ssw0rd2026!
+    volumes:
+      - sql_data_v2:/var/opt/mssql/data # <--- ĐỔI TÊN Ở ĐÂY
+
+  my-web-app:
+    build: .
+    container_name: node_web_container
+    ports:
+      - "8080:3000"
+    environment:
+      - DB_HOST=my-sql-db
+      - DB_USER=sa
+      - DB_PASSWORD=DockerP@ssw0rd2026! # Đảm bảo pass này trùng khớp từng ký tự với pass ở trên
+    depends_on:
+      - my-sql-db
+
+volumes:
+  sql_data_v2: # <--- ĐỔI TÊN Ở ĐÂY LUÔN
