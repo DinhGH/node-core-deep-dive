@@ -1,5 +1,13 @@
 console.log("Log");
 
+const users = [
+  { id: 1, name: "Nguyễn Văn A", role: "Admin", gpa: 3.8 },
+  { id: 2, name: "Trần Thị B", role: "Student", gpa: 3.5 },
+  { id: 3, name: "Lê Văn C", role: "Student", gpa: 3.9 },
+];
+
+console.table(users);
+
 console.error("❌ Đã xảy ra lỗi nghiêm trọng!");
 // In dòng chữ màu đỏ (thường đi kèm stack trace)
 
