@@ -38,3 +38,5 @@ server.listen(5000, () => {
 
 // server.listen(5000, "127.0.0.1"); // chi may local cua minh chay duoc
 // server.listen(5000, "0.0.0.0"); // tat ca may cung mang lan la chay dc
+
+//req.url chi co tham so nay de lay url. con req.params va req.body k co, phai tu viet ta de lay du lieu
