@@ -7,6 +7,8 @@ const {
   createUser,
   checkEmail,
   getUserPagination,
+  getUserDetailService,
+  getuserfilterService,
 } = require("./service.js");
 const getuser = async (req, res, next) => {
   // const data = await getAllUsers();
@@ -33,11 +35,51 @@ async function createuser(req, res, next) {
     .json({ status: "Success", message: "Create user successfully!" });
 }
 
+async function getuserfilter(req, res, next) {
+  try {
+    const data = await getuserfilterService(req.query);
+    return res.status(200).json({ status: "Success", data: data });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function getuserbyid(req, res, next) {
-  // const userid = req.params.id;
-  const { id } = req.query;
-  const data = await getUserById(id);
-  res.status(200).json({ status: "success", results: data.length, data: data });
+  try {
+    // const userid = req.params.id;
+    const { id } = req.query;
+    const data = await getUserById(id);
+    if (data.length === 0) {
+      const err = new Error();
+      err.message = "Can not found this user in db";
+      err.statusCode = 404;
+      return next(err); // cach chuan de dung. no se goi ngay middleware va log loi, ko di xuong cath hay next(err) o duoi
+      // throw err; //dung de nem ngoai le, no se di qua catch roi toi next(err). thuong dung o service de nem loi catch tu bat duoc
+    }
+    res
+      .status(200)
+      .json({ status: "success", results: data.length, data: data });
+  } catch (err) {
+    next(err); // cai nay chi duoc goi khi loi ket noi db, cau lenh sai, hay service throw new Error("");
+  }
+}
+
+async function getUserDetail(req, res, next) {
+  try {
+    const id = req.params.id;
+    const data = await getUserDetailService(id);
+    if (data.length === 0) {
+      const err = new Error();
+      err.message = "USer not Found!";
+      err.statusCode = 404;
+      return next(err);
+    }
+    return res
+      .status(200)
+      .json({ status: "Success", results: data.length, data: data });
+  } catch (err) {
+    next(err);
+  }
 }
 
 async function updateuser(req, res, next) {
@@ -72,8 +114,10 @@ async function deleteuser(req, res, next) {
 module.exports = {
   createuser,
   getuserbyid,
+  getUserDetail,
   getuser,
   deleteuser,
   updateuser,
+  getuserfilter,
   updateuser1,
 };

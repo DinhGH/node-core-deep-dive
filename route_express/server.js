@@ -1,17 +1,33 @@
 const express = require("express"); //console.log(typeof express);//function
 const userRoute = require("./route.js");
 const { connectDB } = require("./db.js");
+const middleware = require("./middleware.js");
 const app = express(); //=const server = http.createServer(...)
 // app.get()route get
 // app.post()route post
 // app.use()dung midldeware
 // app.listen()//lang nghe client goi
-app.use(express.json()); //dung midleware doc json chuyen doi tu json sang object
-
+app.use(express.json()); //Đọc dữ liệu JSON được gửi từ client và chuyển nó thành object JavaScript để lưu vào req.body.
+//chuyen req.body tat ca sang object tu json ma client gui o body.
+//neu ko co middleware nay thi mac dinh req.body la undefined. dua vao Content-Type: application/json de nhan dien
+let countRequest = 1;
+// app.use(
+//   // middleware.errorHandling,//neu khai bao o day thi no ko hoat, he thong tra loi theo kieu cua no
+//   // middleware.checkuserid, // middleware sinh loi de dung cac middleware khac
+//   middleware.logRequest,
+//   middleware.timeRequest,
+//   (req, res, next) => {
+//     console.log(countRequest++);
+//     next();
+//   },
+// );
+//
 connectDB();
 
-app.use("/api/users", userRoute.router);
+app.use("/api/users", userRoute.router); // pham vi o application moi request de phai di qua
 //Khi URL bắt đầu bằng path này thì chuyển request sang router.
+
+app.use(middleware.errorHandling); //middleware xu ly loi phai khai bao sau cung cac route de dam bao
 app.listen(3000, () => {
   console.log("Server run at 3000");
 });
